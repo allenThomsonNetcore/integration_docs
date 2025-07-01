@@ -1,0 +1,33 @@
+{
+  "modules": [
+    {
+      "name": "Base",
+      "steps": [
+        {
+          "title": "Add the dependency",
+          "blocks": [
+            {
+              "type": "code",
+              "content": "import java.util.*",
+              "language": "java"
+            }
+          ]
+        },
+        {
+          "title": "Step 2",
+          "blocks": [
+            {
+              "type": "text",
+              "content": "a"
+            },
+            {
+              "type": "code",
+              "content": "group('group of tests', () {\n  test('unit test', () {\n    expect(true, true);\n  });\n});",
+              "language": "java"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,13 +1,14 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import docs from '../data';
 
 const navLinks = [
   { label: 'Home', path: '/' },
-  { label: 'Android', path: '/android' },
-  { label: 'iOS', path: '/ios' },
-  { label: 'Flutter', path: '/flutter' },
-  { label: 'React Native', path: '/reactnative' }
+  ...Object.keys(docs).map(framework => ({
+    label: framework.charAt(0).toUpperCase() + framework.slice(1),
+    path: `/${framework}`,
+  })),
 ];
 
 function NavBar() {

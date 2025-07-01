@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Tabs, Tab, Alert } from '@mui/material';
+import { Box, Typography, Tabs, Tab, Alert, Chip } from '@mui/material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 function StepBlock({ block }) {
@@ -10,11 +10,19 @@ function StepBlock({ block }) {
 
     return (
       <Box my={2}>
-        <Tabs value={selected} onChange={handleChange} sx={{ mb: 1 }}>
-          {block.languages.map((l, idx) => (
-            <Tab key={l.lang} label={l.label || l.lang} />
-          ))}
-        </Tabs>
+        {block.languages.length > 1 ? (
+          <Tabs value={selected} onChange={handleChange} sx={{ mb: 1 }}>
+            {block.languages.map((l, idx) => (
+              <Tab key={l.lang} label={l.label || l.lang} />
+            ))}
+          </Tabs>
+        ) : (
+          <Chip
+            label={block.languages[0].label || block.languages[0].lang}
+            size="small"
+            sx={{ mb: 1, bgcolor: '#fff', color: '#321B2D', fontWeight: 600 }}
+          />
+        )}
         <SyntaxHighlighter language={langBlock.lang}>
           {langBlock.content}
         </SyntaxHighlighter>
@@ -28,6 +36,13 @@ function StepBlock({ block }) {
     case 'code':
       return (
         <Box my={2}>
+          {block.language && (
+            <Chip
+              label={block.language}
+              size="small"
+              sx={{ mb: 1, bgcolor: '#fff', color: '#321B2D', fontWeight: 600 }}
+            />
+          )}
           <SyntaxHighlighter language={block.language}>
             {block.content}
           </SyntaxHighlighter>

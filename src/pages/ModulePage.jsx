@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Box } from '@mui/material';
 import ModuleList from '../components/ModuleList';
 import SidebarNav from '../components/SidebarNav';
-import docs from '../docsData';
+import docs from '../data';
 
 const drawerWidth = 180;
 const mainContentMargin = 80;
