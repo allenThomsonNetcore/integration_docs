@@ -23,7 +23,19 @@
             {
               "type": "code",
               "content": "group('group of tests', () {\n  test('unit test', () {\n    expect(true, true);\n  });\n});",
-              "language": "java"
+              "language": "dart",
+              "languages": [
+                {
+                  "lang": "javascript",
+                  "label": ".js",
+                  "content": "impor jajaja"
+                },
+                {
+                  "lang": "dart",
+                  "label": ".dart",
+                  "content": "import "
+                }
+              ]
             }
           ]
         }

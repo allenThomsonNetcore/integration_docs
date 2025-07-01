@@ -10,7 +10,7 @@ function LandingPage() {
   return (
     <Container>
       <Typography variant="h3" align="center" gutterBottom sx={{ mt: 4 }}>
-        Welcome to SDK Integration Docs
+        Welcome to Netcore SDK Integration Docs
       </Typography>
       <Grid container spacing={4} justifyContent="center" sx={{ mt: 2 }}>
         {frameworks.map(framework => (

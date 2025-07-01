@@ -17,7 +17,7 @@ function NavBar() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate('/')}>SDK Docs</Typography>
+        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate('/')}>Netcore SDK Integration Docs</Typography>
         {navLinks.map(link => (
           <Button
             key={link.path}
