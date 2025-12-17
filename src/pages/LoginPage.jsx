@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { useAuth } from '../auth/AuthContext';
-import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '../auth/AuthContext';
+// import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-export default function LoginPage() {
+export default function LoginPage({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (login(username, password)) {
-      navigate('/admin');
-    } else {
-      alert('Invalid credentials');
+    try {
+      const res = await axios.post('/api/login', { username, password });
+      localStorage.setItem('token', res.data.token);
+      setError('');
+      if (onLogin) onLogin();
+      window.location.href = '/admin'; // redirect to admin after login
+    } catch {
+      setError('Invalid credentials');
     }
   };
 
@@ -23,6 +27,7 @@ export default function LoginPage() {
       <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" autoFocus />
       <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
       <button type="submit">Login</button>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
     </form>
   );
 } 

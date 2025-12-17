@@ -9,6 +9,10 @@ import EditorDashboard from './admin/EditorDashboard';
 import { AuthProvider } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
+import ReviewQueuePage from './pages/ReviewQueuePage';
+
+
+
 
 const theme = createTheme({
   palette: {
@@ -66,8 +70,13 @@ function App() {
             ))}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredGroups={['admin']}>
                 <EditorDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/review" element={
+              <ProtectedRoute requiredGroups={['admin']}>
+                <ReviewQueuePage />
               </ProtectedRoute>
             } />
             <Route path=":framework/module/:moduleIdx/submodule/:submoduleIdx" element={<ModulePage />} />

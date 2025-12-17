@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import StepNavSidebar from '../components/StepNavSidebar';
+import Snackbar from '@mui/material/Snackbar';
 
 const BLOCK_TYPES = [
   { value: 'text', label: 'Text' },
@@ -217,6 +218,7 @@ function EditorDashboard() {
   const [selectedStepIdx, setSelectedStepIdx] = useState(0);
   const stepRefs = useRef([]);
   const [showRightSidebar, setShowRightSidebar] = useState(true);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   // Move these declarations to the top, before any useEffect or logic that uses them
   let selectedModules = localDocs[selected.framework]?.modules || [];
@@ -438,6 +440,29 @@ function EditorDashboard() {
     localStorage.setItem('integrationDocs-localDocs', JSON.stringify(localDocs));
   }
 
+  async function handleSubmitForReview(type, idx, subIdx) {
+    let data;
+    if (type === 'module') {
+      data = selectedModules[idx];
+    } else if (type === 'submodule') {
+      data = selectedSubmodules[subIdx];
+    }
+    try {
+      const res = await fetch('/api/submit-for-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        },
+        body: JSON.stringify({ data }),
+      });
+      if (!res.ok) throw new Error('Failed to submit for review');
+      setSnackbar({ open: true, message: 'Submitted for review!', severity: 'success' });
+    } catch (e) {
+      setSnackbar({ open: true, message: e.message, severity: 'error' });
+    }
+  }
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <FrameworkSidebar selected={selected} onSelect={setSelected} docs={localDocs} />
@@ -476,6 +501,9 @@ function EditorDashboard() {
                           <IconButton onClick={() => handleEditModule(idx)} sx={{ bgcolor: '#e3f2fd', borderRadius: '50%', mr: 1, '&:hover': { bgcolor: '#90caf9' } }}><EditIcon /></IconButton>
                           <IconButton onClick={() => handleDeleteModule(idx)} sx={{ bgcolor: '#e3f2fd', borderRadius: '50%', '&:hover': { bgcolor: '#90caf9' } }}><DeleteIcon /></IconButton>
                           <Button size="small" onClick={() => { setSelected({ framework: selected.framework, moduleIdx: idx }); handleAddSubmodule(); }} sx={{ ml: 1 }}>Add Submodule</Button>
+                          <Button size="small" variant="contained" color="secondary" onClick={() => handleSubmitForReview('module', idx)} sx={{ ml: 1, border: '2px solid #321B2D', fontWeight: 700 }}>
+                            Submit for Review
+                          </Button>
                         </ListItemSecondaryAction>
                       </ListItem>
                     )}
@@ -506,6 +534,9 @@ function EditorDashboard() {
                               <ListItemSecondaryAction>
                                 <IconButton onClick={() => handleEditSubmodule(sIdx)} sx={{ bgcolor: '#e8f5e9', borderRadius: '50%', mr: 1, '&:hover': { bgcolor: '#a5d6a7' } }}><EditIcon /></IconButton>
                                 <IconButton onClick={() => handleDeleteSubmodule(sIdx)} sx={{ bgcolor: '#e8f5e9', borderRadius: '50%', '&:hover': { bgcolor: '#a5d6a7' } }}><DeleteIcon /></IconButton>
+                                <Button size="small" variant="contained" color="secondary" onClick={() => handleSubmitForReview('submodule', selected.moduleIdx, sIdx)} sx={{ ml: 1, border: '2px solid #321B2D', fontWeight: 700 }}>
+                                  Submit for Review
+                                </Button>
                               </ListItemSecondaryAction>
                             </ListItem>
                           )}
@@ -656,6 +687,12 @@ function EditorDashboard() {
             onToggleLeftSidebar={() => {/* implement if needed */}}
           />
         )}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+        />
       </div>
     </div>
   );
